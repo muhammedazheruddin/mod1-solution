@@ -1,50 +1,45 @@
 (function () {
 'use strict';
 
-angular.module('LunchCheck', [])
-.controller('LunchCheckController', LunchCheckController);
+  angular.module('LunchCheck', [])
+  .controller('LunchCheckController', LunchCheckController);
 
-LunchCheckController.$inject = ['$scope'];
-function LunchCheckController ($scope) {
-  var myString = $scope.myVar;
-  //var splitVal = myString.split(',');
-  //console.log('The array has ' + splitCount.length + ' elements: ' + splitCount.join(' / '));
-  var comma = ',';
-  var splitCount = stringCount(myString,comma);
 
-  function stringCount(haystack, needle) {
-    if (!needle || !haystack) {
-        return false;
-    }
-    else {
-        var words = haystack.split(needle),
-            count = {};
-        for (var i = 0, len = words.length; i < len; i++) {
-            if (count.hasOwnProperty(words[i])) {
-                count[words[i]] = parseInt(count[words[i]], 10) + 1;
-            }
-            else {
-                count[words[i]] = 1;
-            }
-        }
-        return count;
-    }
+  LunchCheckController.$inject = ['$scope'];
+  function LunchCheckController ($scope) {
+    $scope.menu = "";
+    $scope.message = "";
+    $scope.myColor = "";
 
-}
-  $scope.showStatus() = function () {
-      if(splitCount<=3)
-      {
-        $scope.sayMsg = "Enjoy!";
+    $scope.sayMessage = function() {
+      var nr = calculateMenu($scope.menu);
+      if (nr > 3) {
+        $scope.message = "Too much!";
+        $scope.myColor = 'green';
       }
-      else if (splitCount>3) {
-        $scope.sayMsg = "Too Much!";
+      else if (nr <= 3 && nr > 0) {
+        $scope.message = "Enjoy!";
+        $scope.myColor = 'green';
       }
       else {
-        $scope.sayMsg = "Enter a Value first";
+        $scope.message = "Please enter data first";
+        $scope.myColor = 'red';
       }
-      $scope.$apply();
+    };
   };
 
-}
-
+  function calculateMenu(str) {
+    var food = str.split(',');
+    if (food == "") {
+      return '0';
+    }
+    else {
+      for (var i = 0; i < (food.length); i++) {
+        if (food[i] === "") {
+          food.splice(i, 1);
+        }
+      }
+      return food.length;
+   }
+  }
 })();
